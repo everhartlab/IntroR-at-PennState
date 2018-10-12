@@ -40,20 +40,20 @@ list.files("data")
 # ------------------------
 # 
 # 
-# We can use the `read.csv()` function to read (or import) these data into R. 
-# It's important to remember that while in R, these data are simply a copy kept 
+# We can use the `read.csv()` function to read (or import) these data into R.
+# It's important to remember that while in R, these data are simply a copy kept
 # *in memory*, not on the disk, so we don't have to worry too much about
-# accidentally deleting the data :).
+# accidentally deleting the data.
 # 
-# So, how do we actually USE the `read.csv()` function? 
+# How do we use the `read.csv()` function? 
 # 
 ?read.csv
 # 
 # You will notice that the help page describes all the sibling functions, too:
-# `read.table()`, `read.csv2()`, `read.delim()`, `read.delim2()`. Let's read the 
+# `read.table()`, `read.csv2()`, `read.delim()`, `read.delim2()`. Let's read the
 # Description and Usage first. All arguments except 'file' have a default value
-# (e.g. header = TRUE). You do not need to specify these arguments unless you want 
-# to change the default. Let's use `read.csv()` with the default values.
+# (e.g. header = TRUE). You do not need to specify these arguments unless you
+# want to change the default. Let's use `read.csv()` with the default values.
 # 
 read.csv("data/fungicide_dat.csv")
 # 
@@ -70,8 +70,8 @@ read.table("data/fungicide_dat.csv")
 read.table("data/fungicide_dat.csv", header = TRUE, sep = ",")
 # 
 # Now that we have these elements, we can read the data into an object, which we
-# can call "fungicide". Once we do this, we can check the dimensions to make sure
-# that we have all of the data.
+# can call "fungicide". Once we do this, we can check the dimensions to make
+# sure that we have all of the data.
 # 
 fungicide <- read.csv("data/fungicide_dat.csv")
 nrow(fungicide)
@@ -87,7 +87,8 @@ fungicide
 # 
 str(fungicide)
 # 
-# We can also use the `View()` function to look at our data in spreadsheet-style.
+# We can also use the `View()` function to look at our data in
+# spreadsheet-style.
 # 
 stop("
 
@@ -95,12 +96,13 @@ stop("
      
      ")
 # 
-# The dummy data presented here consists of yield (measured in bu/acre) and disease
-# severity (measured on a scale of 1 to 10) of a corn culitvar treated with two
-# fungicides. This trial was conducted to measure the efficacy of the two fungicides 
-# to manage disease. The experiment was laid out as a Completely Randomized Design. 
+# The example data presented here consists of yield (measured in bu/acre) and
+# disease severity (measured on a scale of 1 to 10) of a corn culitvar treated
+# with two fungicides. This trial was conducted to measure the efficacy of the
+# two fungicides to manage disease. The experiment was laid out in a Completely
+# Randomized Design.
 # 
-# With these data, we want to answer the following questions:
+# In the following exercises, we will answer the following questions:
 # 
 # 1. What is the mean yield of each treatment group in kg/ha?
 # 2. What is the percent severity of Control and Fungicide A?
@@ -108,15 +110,17 @@ stop("
 # 
 # Step 3: Advanced data manipulation
 # ----------------------------------
-# 
-# The package 'dplyr' provides functions for easy and advanced data manipulation.
-# If we want to use it, we can download the package to our computer with the 
-# function `install.packages()`. This will install a package from CRAN and place
-# it into your R *Library*.
+#
+# The package 'dplyr' provides functions for easy and advanced data
+# manipulation. If we want to use it, we can download the package to our
+# computer with the function `install.packages()`. This will download a package
+# from CRAN and place it into your R *Library*, just like a book added to your
+# library.
 # 
 install.packages("dplyr")
 # 
-# To load this package, we can use the function `library()`.
+# To load this package, like pulling a book off the shelf, we can use the
+# function `library()`.
 # 
 library("dplyr")
 # 
@@ -127,27 +131,27 @@ library("dplyr")
 # a) Convert yield data from bu/acre to kg/ha
 # To do this conversion for corn, we need to multiply the yield in bu/acre with
 # 62.77. So, how can we add a column with yield data in kg/ha? We can do this 
-# similar to what we learnt in Part 1.
+# similar to what we learned in Part 1.
 # 
 # `fungicide$Yield_kg_per_ha <- fungicide$Yield_bu_per_acre*62.77`
 # 
 # We can also use the function `mutate()` from 'dplyr'. This adds a new variable 
-# using existing variables. The usage of this function is as: 
+# using existing variables. The usage of this function is as follows: 
 # 
 # mutate(data, new_variable_name = calculation_based_upon_existing_variables)
 # 
 fungicide_1 <- mutate(fungicide, Yield_kg_per_ha = Yield_bu_per_acre*62.77)
 # 
-# > Note: We did not have to use fungicide$Yield_bu_per_acre. 
+# > Note: We did not have to use fungicide$Yield_bu_per_acre
 # 
-# Let's print the data to see what we have
+# Let's inspect the data to see what we have
 fungicide_1
 # 
 # We have a new column `Yield_kg_per_ha`. We have two columns with yield and one 
 # with severity. We don't want severity data and want yield data only in kg/ha.
 # 
 # b) Create a new data frame with only `Treatment` and `Yield_kg_per_ha` columns
-# We can use the function `select()` that picks variables based on their names.
+# We can use the function `select()` that picks variables by their name.
 # 
 fungicide_2 <- select(fungicide_1, Treatment, Yield_kg_per_ha)
 fungicide_2
@@ -169,26 +173,27 @@ fungicide_3 <- group_by(fungicide_2, Treatment)
 fungicide_3 
 # 
 # You will notice that `fungicide_2` and `fungicide_3` are a little different.
-# `fungicide_3` is also a "tibble", which is a form of data frame that gives 
+# `fungicide_3` is also a "tibble", which is a form of data frame that gives
 # more information about our data (e.g. what kind of data the columns are). You
-# will notice that Treatment is a factor, while Yield_kg_per_ha is a double 
-# (decimal). It also tells us that our data is grouped by Treatment (therefore, 
-# it has three groups). To add the grouping information to this data frame, 
-# 'dplyr' uses a sister package to convert it into a tibble. Also, note that 
-# `Yield_kg_per_ha` is not printing the whole answer (after decimals) and 
-# has underlined first two digits. The tibble format is different when we print
-# it, but the same when we use `View()`. The digits are underlined so that it
-# is easier to read larger numbers. It's role is similar to a comma. So,
-# '10,000' will have '10' underlined and '100,000' will have '100' underlined.
+# will notice that Treatment is a factor, while Yield_kg_per_ha is a double
+# (decimal). It also tells us that our data is grouped by Treatment (therefore,
+# it has three groups). To add the grouping information to this data frame,
+# 'dplyr' uses a sister package to convert it into a tibble. Also, note that
+# `Yield_kg_per_ha` is not printing the whole answer (after decimals) and has
+# underlined first two digits. The tibble format is different when we print it,
+# but the same when we use `View()`. The digits are underlined so that it is
+# easier to read larger numbers. It's role is similar to a comma. So, '10,000'
+# will have '10' underlined and '100,000' will have '100' underlined.
 # 
 # e) Find the mean yield of every group
 fungicide_4 <- summarize(fungicide_3, Mean_yield = mean(Yield_kg_per_ha))
 fungicide_4
 # 
-# Instead of creating different objects everytime, we can perform multiple functions
-# at once and create one final object. We use the pipe operator, %>% , for this purpose.
-# The left hand side of %>% acts as the input on which an operation on the right side
-# is performed. A shortcut to write %>% is `ctrl+shift+m`.
+# Instead of creating different objects everytime, we can perform multiple
+# functions at once and create one final object. We use the pipe operator, %>% ,
+# for this purpose. The left hand side of %>% acts as the input on which an
+# operation on the right side is performed. A shortcut to write %>% is
+# `ctrl+shift+m`.
 # 
 yield_summary <- fungicide %>% 
   mutate(Yield_kg_per_ha = Yield_bu_per_acre*62.77) %>%  
@@ -301,3 +306,4 @@ summary(fit_severity) # p-value is less than 0.05, so let's do Tukey's post-hoc 
 TukeyHSD(fit_severity) 
 # 
 # All the treatment pairs are significantly different from each other as the p-value is < 0.05.
+# Now we're ready to move on to Part 3, visualizations.
